@@ -41,7 +41,14 @@ export default {
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
-  axios: {},
+  axios: {
+    baseURL: process.env.BASE_URL,
+    credentials: true,
+    headers: {
+      'Authorization': `Basic ${Buffer.from(`${process.env.WC_CK}:${process.env.WC_CS}`).toString('base64')}`
+    },
+  },
+  
 
   // PWA module configuration: https://go.nuxtjs.dev/pwa
   pwa: {
