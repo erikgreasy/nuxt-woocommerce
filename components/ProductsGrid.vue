@@ -18,7 +18,7 @@ export default {
 
     methods: {
         async getProducts() {
-            const res = await this.$axios.get('products')
+            const res = await this.$axios.get('products?status=publish')
             this.products = res.data
         }
     },
