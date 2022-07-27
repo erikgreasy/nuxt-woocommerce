@@ -1,14 +1,10 @@
 <template>
-    <div>
-        <NuxtLink to="/">Home</NuxtLink>
-
+    <div class="container">
         <h1>{{ product.name }}</h1>
         <div v-html="product.description"></div>
         <div class="text-xl" v-html="product.price_html"></div>
 
         <button class="bg-gray-100 p-3" @click="addToCart">Add to cart</button>
-
-        <NuxtLink to="/checkout">Checkout</NuxtLink>
     </div>
 </template>
 

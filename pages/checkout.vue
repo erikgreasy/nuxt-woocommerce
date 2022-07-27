@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="container">
         <h1 class="text-2xl">Checkout</h1>
 
         <!-- Cart -->

@@ -1,5 +1,5 @@
 <template>
-  <div class="container mx-auto px-4">
+  <div class="container">
     <header>
       <h1>Welcome to our shop</h1>
     </header>
