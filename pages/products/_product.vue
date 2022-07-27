@@ -33,6 +33,7 @@ export default {
 
             localStorage.setItem('nuxtcommerce_cart', JSON.stringify(cart))
 
+            alert('Product has been added to cart')
         }
     },
 
