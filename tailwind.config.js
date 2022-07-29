@@ -9,6 +9,12 @@ module.exports = {
                     '2xl': '1140px',
                 }
             },
+            colors: {
+                primary: '#4F46E5'
+            },
+            fontFamily: {
+                sans: ['Inter']
+            }
         }
     }
 }

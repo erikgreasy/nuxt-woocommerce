@@ -1,10 +1,21 @@
 <template>
     <div class="container">
-        <h1>{{ product.name }}</h1>
-        <div v-html="product.description"></div>
-        <div class="text-xl" v-html="product.price_html"></div>
+        <div class="grid grid-cols-2 gap-x-8">
+            <div>
+                <img v-if="product?.images?.length" :src="product.images[0].src" :alt="product.images[0].alt" class="rounded-lg h-[300px] w-full object-cover">
+            </div>
+            <div>
+                <h1 class="font-bold text-2xl mb-5" v-if="product">{{ product.name }}</h1>
+                <div v-else class="w-56 h-8 bg-gray-200 animate-pulse rounded-lg mb-5"></div>
 
-        <button class="bg-gray-100 p-3" @click="addToCart">Add to cart</button>
+                <div v-if="product" v-html="product.price_html" class="text-3xl mb-5"></div>
+                <div v-else class="w-28 h-10 bg-gray-200 animate-pulse rounded-lg"></div>
+                
+                <div v-if="product" v-html="product.description" class="mb-10"></div>
+
+                <button v-if="product" class="bg-primary text-white py-3 px-20 rounded-lg" @click="addToCart">Add to cart</button>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -12,7 +23,7 @@
 export default {
     data() {
         return {
-            product: {},
+            product: null,
         }
     },
 
