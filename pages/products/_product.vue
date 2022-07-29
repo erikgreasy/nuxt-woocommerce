@@ -29,17 +29,17 @@ export default {
 
     methods: {
         async getProduct() {
-            const res = await this.$axios.get('products/' + this.$route.params.product)
+            const res = await this.$axios.get('products/' + this.$route.params.product.split('-')[0])
             this.product = res.data 
         },
 
         addToCart() {
             const cart = JSON.parse(localStorage.getItem('nuxtcommerce_cart')) || {}
             
-            if(cart[this.$route.params.product]) {
-                cart[this.$route.params.product] += 1
+            if(cart[this.product.id]) {
+                cart[this.product.id] += 1
             } else {
-                cart[this.$route.params.product] = 1
+                cart[this.product.id] = 1
             }
 
             localStorage.setItem('nuxtcommerce_cart', JSON.stringify(cart))
