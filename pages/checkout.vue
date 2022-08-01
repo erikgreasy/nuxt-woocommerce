@@ -50,7 +50,6 @@ export default {
     data() {
         return {
             products: [],
-            cartProducts: [],
             orderInformation: {
                 status: 'processing',
                 billing: {
@@ -64,16 +63,14 @@ export default {
         }
     },
 
-    methods: {
-        getCart() {
-            return JSON.parse(localStorage.getItem('nuxtcommerce_cart')) || {}
-        },
-        deleteCart() {
-            localStorage.removeItem('nuxtcommerce_cart')
-        },
-        async getProducts() {
-            const res = await this.$axios.get('products')
-            this.products = res.data
+    async fetch() {
+        const res = await this.$axios.get('products')
+        this.products = res.data
+    },
+
+    computed: {
+        cartProducts() {
+            if(!process.client) return []
 
             const cart = this.getCart()
 
@@ -81,13 +78,23 @@ export default {
                 return Object.prototype.hasOwnProperty.call(cart, item.id);
             })
 
-            this.cartProducts = cartProducts.map(item => {
+            return cartProducts.map(item => {
                 return {
                     product: item,
                     quantity: cart[item.id],
                 }
             })
+        }
+    },
+
+    methods: {
+        getCart() {
+            return JSON.parse(localStorage.getItem('nuxtcommerce_cart')) || {}
         },
+        deleteCart() {
+            localStorage.removeItem('nuxtcommerce_cart')
+        },
+
         async placeOrder() {
             const data = this.orderInformation
             data.line_items = this.cartProducts.map(item => {
@@ -111,14 +118,5 @@ export default {
             }
         }
     },
-
-    mounted() {
-        this.getProducts()
-    }
-
 }
 </script>
-
-<style>
-
-</style>
