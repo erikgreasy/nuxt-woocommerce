@@ -18,14 +18,20 @@
                 <div v-html="product.price_html" class="text-3xl mb-5"></div>
                 <div v-html="product.description" class="mb-10"></div>
 
-                <button class="bg-primary text-white py-3 px-20 rounded-lg" @click="addToCart">Add to cart</button>
+                <AppButton @click="addToCart">Add to cart</AppButton>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+import AppButton from '~/components/base/AppButton.vue'
+
 export default {
+    components: {
+        AppButton,
+    },
+
     data() {
         return {
             product: {},

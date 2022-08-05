@@ -39,14 +39,20 @@
                     <input v-model="orderInformation.billing.city" type="text">
                 </div>
 
-                <button>Place order</button>
+                <AppButton type="submit">Place order</AppButton>
             </form>
         </div>
     </div>
 </template>
 
 <script>
+import AppButton from './../components/base/AppButton.vue'
+
 export default {
+    components: {
+        AppButton,
+    },
+
     data() {
         return {
             products: [],
