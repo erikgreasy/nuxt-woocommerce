@@ -16,5 +16,8 @@ module.exports = {
                 sans: ['Inter']
             }
         }
-    }
+    },
+    plugins: [
+        require('@tailwindcss/forms'),
+    ]
 }
