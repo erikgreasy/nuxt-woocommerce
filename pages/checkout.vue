@@ -20,23 +20,23 @@
             <form action="" @submit.prevent="placeOrder">
                 <div>
                     <label for="">First name:</label>
-                    <input type="text" v-model="orderInformation.billing.first_name">
+                    <input v-model="orderInformation.billing.first_name" type="text">
                 </div>
                 <div>
                     <label for="">Last name:</label>
-                    <input type="text" v-model="orderInformation.billing.last_name">
+                    <input v-model="orderInformation.billing.last_name" type="text">
                 </div>
                 <div>
                     <label for="">Email:</label>
-                    <input type="email" v-model="orderInformation.billing.email">
+                    <input v-model="orderInformation.billing.email" type="email">
                 </div>
                 <div>
                     <label for="">Street:</label>
-                    <input type="text" v-model="orderInformation.billing.address_1">
+                    <input v-model="orderInformation.billing.address_1" type="text">
                 </div>
                 <div>
                     <label for="">City:</label>
-                    <input type="text" v-model="orderInformation.billing.city">
+                    <input v-model="orderInformation.billing.city" type="text">
                 </div>
 
                 <button>Place order</button>
