@@ -90,6 +90,15 @@ export default {
                     quantity: cart[item.id],
                 }
             })
+        },
+        cartTotals() {
+            let total = 0;
+
+            this.cartProducts.forEach(item => {
+                total += parseFloat(item.product.price) * parseInt(item.quantity)
+            })
+
+            return total
         }
     },
 
