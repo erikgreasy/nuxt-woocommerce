@@ -40,7 +40,11 @@ export default {
 
     async fetch() {
         const res = await this.$axios.get('products/' + this.$route.params.product.split('-')[0])
-        this.product = res.data 
+        this.product = res.data
+
+        if(this.product.status !== 'publish') {
+            return this.$nuxt.context.redirect(302, '/')
+        }
     },
 
     methods: {
