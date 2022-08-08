@@ -11,7 +11,7 @@
         </div>
         <div v-else class="grid grid-cols-2 gap-x-8">
             <div>
-                <img v-if="product?.images?.length" :src="product.images[0].src" :alt="product.images[0].alt" class="rounded-lg h-[300px] w-full object-cover">
+                <img v-if="product?.images?.length" :src="product.images[0].src" :alt="product.images[0].alt" class="rounded-lg h-[600px] w-full object-cover">
             </div>
             <div>
                 <h1 class="font-bold text-2xl mb-5">{{ product.name }}</h1>
