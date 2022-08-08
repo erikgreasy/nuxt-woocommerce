@@ -14,15 +14,19 @@
                         <li v-for="cartProduct in cartProducts" :key="cartProduct.product.id" 
                             class="flex border-b border-gray-200 py-5"
                         >
-                            <img 
-                                v-if="cartProduct.product.images.length" 
-                                :src="cartProduct.product.images[0].src" 
-                                alt="" 
-                                class="w-28 h-32 object-cover rounded-lg mr-5"
-                            >
+                            <NuxtLink :to="`/products/${cartProduct.product.id}-${cartProduct.product.slug}`">
+                                <img 
+                                    v-if="cartProduct.product.images.length" 
+                                    :src="cartProduct.product.images[0].src" 
+                                    alt="" 
+                                    class="w-28 h-32 object-cover rounded-lg mr-5"
+                                >
+                            </NuxtLink>
                             <div>
                                 <div class="font-semibold">
-                                    {{ cartProduct.product.name }}
+                                    <NuxtLink :to="`/products/${cartProduct.product.id}-${cartProduct.product.slug}`">
+                                        {{ cartProduct.product.name }}
+                                    </NuxtLink>
                                 </div>
                                 <div>
                                     {{ cartProduct.quantity }}pcs
