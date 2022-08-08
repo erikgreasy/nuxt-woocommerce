@@ -6,6 +6,9 @@
 
             <!-- Cart -->
             <div>
+                <div v-if="message" class="rounded-lg bg-red-300 py-3 px-10 text-red-800">
+                    {{ message }}
+                </div>
                 <div v-if="cartProducts.length">
                     <ul>
                         <li v-for="cartProduct in cartProducts" :key="cartProduct.product.id" 
@@ -92,23 +95,39 @@ export default {
                     city: '',
                     email: '',
                 },
-            }
+            },
+            message: null,
         }
     },
 
     async fetch() {
-        const res = await this.$axios.get('products')
+        const res = await this.$axios.get('products?status=publish')
         this.products = res.data
     },
 
     computed: {
         cartProducts() {
-            if(!process.client) return []
+            if(!process.client || this.$fetchState.pending) return []
 
             const cart = this.getCart()
 
             const cartProducts = this.products.filter(item => {
                 return Object.prototype.hasOwnProperty.call(cart, item.id);
+            })
+
+            const cartProductIds = cartProducts.map(item => item.id)
+
+            Object.entries(cart).forEach(item => {
+                let removed = false
+
+                if( !cartProductIds.includes( parseInt(item[0]) ) ) {
+                    this.removeFromCart(parseInt(item[0]))
+                    removed = true
+                }
+
+                if(removed) {
+                    this.message = 'Product has been removed from cart, because it is no longer available.'
+                }
             })
 
             return cartProducts.map(item => {
@@ -135,6 +154,12 @@ export default {
         },
         deleteCart() {
             localStorage.removeItem('nuxtcommerce_cart')
+        },
+        removeFromCart(productId) {
+            const cart = this.getCart()
+            delete cart[productId]
+
+            localStorage.setItem('nuxtcommerce_cart', JSON.stringify(cart))
         },
 
         async placeOrder() {
