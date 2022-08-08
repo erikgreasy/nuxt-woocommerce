@@ -2,45 +2,72 @@
     <div class="container">
         <h1 class="text-2xl">Checkout</h1>
 
-        <!-- Cart -->
-        <div>
-            <ul v-if="cartProducts.length">
-                <li v-for="cartProduct in cartProducts" :key="cartProduct.product.id">
-                    {{ cartProduct.product.name }} ...... {{ cartProduct.quantity }}
-                </li>
-            </ul>
-            <div v-else>
-                Cart is empty
+        <div class="grid grid-cols-2 gap-x-32">
+
+            <!-- Cart -->
+            <div>
+                <div v-if="cartProducts.length">
+                    <ul>
+                        <li v-for="cartProduct in cartProducts" :key="cartProduct.product.id" 
+                            class="flex border-b border-gray-200 py-5"
+                        >
+                            <img 
+                                v-if="cartProduct.product.images.length" 
+                                :src="cartProduct.product.images[0].src" 
+                                alt="" 
+                                class="w-28 h-32 object-cover rounded-lg mr-5"
+                            >
+                            <div>
+                                <div class="font-semibold">
+                                    {{ cartProduct.product.name }}
+                                </div>
+                                <div>
+                                    {{ cartProduct.quantity }}pcs
+                                </div>
+                                <div v-html="cartProduct.product.price_html"></div>
+                            </div>
+                        </li>
+                    </ul>
+                    <div>
+                        <div class="flex justify-between text-xl font-semibold pt-5">
+                            <div>Total</div>
+                            <div>{{ cartTotals }} €</div>
+                        </div>
+                    </div>
+                </div>
+                <div v-else>
+                    Cart is empty
+                </div>
             </div>
-        </div>
 
-        <!-- Checkout form -->
-        <div v-if="cartProducts.length">
-            <h3 class="text-xl">Your information:</h3>
-            <form action="" @submit.prevent="placeOrder">
-                <div>
-                    <label for="">First name:</label>
-                    <input v-model="orderInformation.billing.first_name" type="text">
-                </div>
-                <div>
-                    <label for="">Last name:</label>
-                    <input v-model="orderInformation.billing.last_name" type="text">
-                </div>
-                <div>
-                    <label for="">Email:</label>
-                    <input v-model="orderInformation.billing.email" type="email">
-                </div>
-                <div>
-                    <label for="">Street:</label>
-                    <input v-model="orderInformation.billing.address_1" type="text">
-                </div>
-                <div>
-                    <label for="">City:</label>
-                    <input v-model="orderInformation.billing.city" type="text">
-                </div>
+            <!-- Checkout form -->
+            <div v-if="cartProducts.length">
+                <h3 class="text-xl font-semibold mb-5">Your information:</h3>
+                <form action="" @submit.prevent="placeOrder">
+                    <div class="mb-3">
+                        <label for="">First name:</label>
+                        <input v-model="orderInformation.billing.first_name" type="text">
+                    </div>
+                    <div class="mb-3">
+                        <label for="">Last name:</label>
+                        <input v-model="orderInformation.billing.last_name" type="text">
+                    </div>
+                    <div class="mb-3">
+                        <label for="">Email:</label>
+                        <input v-model="orderInformation.billing.email" type="email">
+                    </div>
+                    <div class="mb-3">
+                        <label for="">Street:</label>
+                        <input v-model="orderInformation.billing.address_1" type="text">
+                    </div>
+                    <div class="mb-3">
+                        <label for="">City:</label>
+                        <input v-model="orderInformation.billing.city" type="text">
+                    </div>
 
-                <AppButton type="submit">Place order</AppButton>
-            </form>
+                    <AppButton type="submit" class="block w-full">Place order</AppButton>
+                </form>
+            </div>
         </div>
     </div>
 </template>
@@ -135,3 +162,13 @@ export default {
     },
 }
 </script>
+
+<style scoped>
+label {
+    @apply block text-sm mb-1;
+}
+
+input {
+    @apply block w-full border-gray-300 rounded-lg;
+}
+</style>
