@@ -76,6 +76,41 @@
                         <input v-model="orderInformation.billing.city" type="text">
                     </div>
 
+                    <!-- Shipping -->
+                    <div class="mt-5 py-5 border-t border-gray-200 ">
+                        <h3 class="text-xl font-semibold mb-5">Shipping:</h3>
+
+                        <select v-model="selectedShippingZone" @change="chooseShippingZone" class="mb-5">
+                            <option v-for="zone in shippingZones" :key="zone.id" :value="zone.id">
+                                {{ zone.name }}
+                            </option>
+                        </select>
+
+                        <ul class="grid grid-cols-2 gap-3">
+                            <li 
+                                v-for="method in shippingMethods" :key="method.id" 
+                                @click="chooseShippingMethod(method)"
+                                :class="{'border-primary' : method.method_id === orderInformation.shipping_lines[0]?.method_id}"
+                                class="border-2 border-gray-200 rounded-lg p-4 text-sm hover:cursor-pointer"
+                            >
+                                <div>
+                                    {{ method.settings.title.value }}
+                                </div>
+                                <div class="text-gray-500 mb-3">
+                                    {{ method.settings.title.description }}
+                                </div>
+                                <div>
+                                    <span v-if="method.settings.cost.value">
+                                        {{ method.settings.cost.value }} €
+                                    </span>
+                                    <span v-else>
+                                        Free
+                                    </span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
                     <AppButton type="submit" class="block w-full">Place order</AppButton>
                 </form>
             </div>
@@ -94,6 +129,9 @@ export default {
     data() {
         return {
             products: [],
+            shippingMethods: [],
+            shippingZones: [],
+            selectedShippingZone: null,
             orderInformation: {
                 status: 'processing',
                 billing: {
@@ -103,6 +141,7 @@ export default {
                     city: '',
                     email: '',
                 },
+                shipping_lines: []
             },
             message: null,
             errors: null,
@@ -110,8 +149,13 @@ export default {
     },
 
     async fetch() {
-        const res = await this.$axios.get('products?status=publish')
-        this.products = res.data
+        const [productsRes, shippingZonesRes] = await Promise.all([
+            this.$axios.get('products?status=publish'),
+            this.$axios.get('shipping/zones')
+        ])
+        
+        this.products = productsRes.data
+        this.shippingZones = shippingZonesRes.data.filter(zone => zone.id !== 0)
     },
 
     computed: {
@@ -169,6 +213,20 @@ export default {
             delete cart[productId]
 
             localStorage.setItem('nuxtcommerce_cart', JSON.stringify(cart))
+        },
+
+        async chooseShippingZone() {
+            const res = await this.$axios.get(`shipping/zones/${this.selectedShippingZone}/methods`)
+
+            this.shippingMethods = res.data
+        },
+
+        chooseShippingMethod(method) {
+            this.orderInformation.shipping_lines = [{
+                method_id: method.method_id,
+                method_title: method.title,
+                total: method.settings.cost.value,
+            }]
         },
 
         async placeOrder() {
