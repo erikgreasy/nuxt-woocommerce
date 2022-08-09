@@ -9,6 +9,10 @@
                 <div v-if="message" class="rounded-lg bg-red-300 py-3 px-10 text-red-800">
                     {{ message }}
                 </div>
+                <div v-if="errors" class="rounded-lg bg-red-300 py-3 px-10 text-red-800">
+                    {{ errors.message }}
+                </div>
+
                 <div v-if="cartProducts.length">
                     <ul>
                         <li v-for="cartProduct in cartProducts" :key="cartProduct.product.id" 
@@ -101,6 +105,7 @@ export default {
                 },
             },
             message: null,
+            errors: null,
         }
     },
 
@@ -168,6 +173,8 @@ export default {
 
         async placeOrder() {
             const data = this.orderInformation
+            this.errors = null
+
             data.line_items = this.cartProducts.map(item => {
                 return {
                     product_id: item.product.id,
@@ -175,17 +182,21 @@ export default {
                 }
             })
 
-            const res = await this.$axios.post('orders', data)
+            try {
+                const res = await this.$axios.post('orders', data)
 
-            if(res.status === 201) {
-                this.deleteCart()
+                if(res.status === 201) {
+                    this.deleteCart()
 
-                this.$router.push({
-                    path: '/success',
-                    params: {
-                        fromCheckout: true
-                    }
-                })
+                    this.$router.push({
+                        path: '/success',
+                        params: {
+                            fromCheckout: true
+                        }
+                    })
+                }
+            } catch(err) {
+                this.errors = err.response.data
             }
         }
     },
