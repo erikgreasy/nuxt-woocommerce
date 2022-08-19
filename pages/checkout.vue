@@ -80,12 +80,6 @@
                     <div class="mt-5 py-5 border-t border-gray-200 ">
                         <h3 class="text-xl font-semibold mb-5">Shipping:</h3>
 
-                        <select v-model="selectedShippingZone" @change="chooseShippingZone" class="mb-5">
-                            <option v-for="zone in shippingZones" :key="zone.id" :value="zone.id">
-                                {{ zone.name }}
-                            </option>
-                        </select>
-
                         <ul class="grid grid-cols-2 gap-3">
                             <li 
                                 v-for="method in shippingMethods" :key="method.id" 
@@ -100,7 +94,7 @@
                                     {{ method.settings.title.description }}
                                 </div>
                                 <div>
-                                    <span v-if="method.settings.cost.value">
+                                    <span v-if="method.settings.cost?.value && method.settings.cost?.value != '0'">
                                         {{ method.settings.cost.value }} €
                                     </span>
                                     <span v-else>
@@ -130,10 +124,11 @@ export default {
         return {
             products: [],
             shippingMethods: [],
-            shippingZones: [],
-            selectedShippingZone: null,
+            selectedShippingZone: 0,
             orderInformation: {
                 status: 'processing',
+                payment_method: 'cod',
+                payment_method_title: 'Cash on delivery',
                 billing: {
                     first_name: '',
                     last_name: '',
@@ -149,13 +144,13 @@ export default {
     },
 
     async fetch() {
-        const [productsRes, shippingZonesRes] = await Promise.all([
+        const [productsRes, methodsRes] = await Promise.all([
             this.$axios.get('products?status=publish'),
-            this.$axios.get('shipping/zones')
+            this.$axios.get(`shipping/zones/${this.selectedShippingZone}/methods`)
         ])
         
         this.products = productsRes.data
-        this.shippingZones = shippingZonesRes.data.filter(zone => zone.id !== 0)
+        this.shippingMethods = methodsRes.data
     },
 
     computed: {
@@ -215,17 +210,11 @@ export default {
             localStorage.setItem('nuxtcommerce_cart', JSON.stringify(cart))
         },
 
-        async chooseShippingZone() {
-            const res = await this.$axios.get(`shipping/zones/${this.selectedShippingZone}/methods`)
-
-            this.shippingMethods = res.data
-        },
-
         chooseShippingMethod(method) {
             this.orderInformation.shipping_lines = [{
                 method_id: method.method_id,
                 method_title: method.title,
-                total: method.settings.cost.value,
+                total: method.settings.cost?.value || '',
             }]
         },
 
